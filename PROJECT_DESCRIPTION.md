@@ -1,79 +1,209 @@
-# Project Description
+# ChainVault — A Decentralized Chore & Rewards System (Solana + Anchor)
 
-**Deployed Frontend URL:** [TODO: Link to your deployed frontend]
+ChainVault is a decentralized application built on **Solana** using **Anchor**, designed for parents and children to manage chores, rewards, and wallet interactions in a secure, trustless way.
 
-**Solana Program ID:** [TODO: Your deployed program's public key]
+This system supports:
 
-## Project Overview
+* Creating child wallets
+* Assigning chores
+* Submitting completion proofs
+* Rating chores
+* Automatic reward distribution
+* Withdrawing SOL earnings
 
-### Description
-[TODO: Provide a comprehensive description of your dApp. Explain what it does. Be detailed about the core functionality.]
+Fully on-chain & permissioned.
 
-### Key Features
-[TODO: List the main features of your dApp. Be specific about what users can do.]
+---
 
-- Feature 1: [Description]
-- Feature 2: [Description]
-- ...
-  
-### How to Use the dApp
-[TODO: Provide step-by-step instructions for users to interact with your dApp]
+## ✨ Features
 
-1. **Connect Wallet**
-2. **Main Action 1:** [Step-by-step instructions]
-3. **Main Action 2:** [Step-by-step instructions]
-4. ...
+### 👪 **Child Wallet Management**
 
-## Program Architecture
-[TODO: Describe your Solana program's architecture. Explain the main instructions, account structures, and data flow.]
+* Initialize a child wallet account
+* Prevent double initialization
 
-### PDA Usage
-[TODO: Explain how you implemented Program Derived Addresses (PDAs) in your project. What seeds do you use and why?]
+### 🧹 **Chore Management**
 
-**PDAs Used:**
-- PDA 1: [Purpose and description]
-- PDA 2: [Purpose and description]
+* Create chores with description & reward
+* Assign each chore to a child
 
-### Program Instructions
-[TODO: List and describe all the instructions in your Solana program]
+### ✔️ **Completion Submission**
 
-**Instructions Implemented:**
-- Instruction 1: [Description of what it does]
-- Instruction 2: [Description of what it does]
-- ...
+* Child submits proof
+* Only the assigned child may submit
 
-### Account Structure
-[TODO: Describe your main account structures and their purposes]
+### ⭐ **Rating + Payment**
 
-```rust
-// Example account structure (replace with your actual structs)
-#[account]
-pub struct YourAccountName {
-    // Describe each field
-}
+* Parent gives rating (1–5)
+* Reward auto-transferred to child balance
+
+### 💰 **SOL Withdrawal**
+
+* Child withdraws earnings from vault treasury
+
+---
+
+## 📦 Project Structure
+
+```
+programs/
+└── chainvault/
+    ├── src/
+    │   ├── lib.rs
+    │   ├── errors.rs
+    │   ├── state.rs
+    │   └── constants.rs
+tests/
+└── chainvault.ts
+frontend/
+└── (Optional React + Vite UI)
 ```
 
-## Testing
+### **On-chain Accounts**
 
-### Test Coverage
-[TODO: Describe your testing approach and what scenarios you covered]
+| Account         | Purpose                                      |
+| --------------- | -------------------------------------------- |
+| **Vault**       | Tracks parent, treasury, child PDAs          |
+| **ChildWallet** | Tracks child's earnings                      |
+| **Chore**       | Stores chore details, reward, status, rating |
 
-**Happy Path Tests:**
-- Test 1: [Description]
-- Test 2: [Description]
-- ...
+---
 
-**Unhappy Path Tests:**
-- Test 1: [Description of error scenario]
-- Test 2: [Description of error scenario]
-- ...
+# 🚀 Local Development
 
-### Running Tests
-```bash
-# Commands to run your tests
+### 1. Install dependencies
+
+```
+anchor --version       # must be 0.31.x
+solana --version       # 1.17.x / 1.18.x
+node --version         # >= 18
+```
+
+### 2. Start local validator (if required)
+
+```
+solana-test-validator --reset
+```
+
+### 3. Run tests
+
+```
 anchor test
 ```
 
-### Additional Notes for Evaluators
+Expected result:
 
-[TODO: Add any specific notes or context that would help evaluators understand your project better]
+```
+9 passing
+0 failing
+```
+
+---
+
+# 🌐 Deploy To Devnet
+
+### 1. Airdrop SOL
+
+```
+solana airdrop 2 -u devnet
+```
+
+### 2. Build & Deploy
+
+```
+anchor build
+anchor deploy --provider.cluster devnet
+```
+
+Deployment output:
+
+```
+Program Id: 6UUoNhQHHQjKiFjs5wbyQ8X5jHk4aVXEwi8Lzvt8cTFw
+Deploy success
+```
+
+Update `Anchor.toml`:
+
+```toml
+[programs.devnet]
+chainvault = "6UUoNhQHHQjKiFjs5wbyQ8X5jHk4aVXEwi8Lzvt8cTFw"
+```
+
+---
+
+# 🖥️ Frontend Setup (React + Vite)
+
+### 1. Move into folder
+
+```
+cd frontend
+```
+
+### 2. Install packages
+
+```
+npm install
+```
+
+### 3. Copy IDL
+
+```
+mkdir -p public/idl
+cp ../anchor_project/chainvault/target/idl/chainvault.json public/idl/
+```
+
+### 4. Start dev server
+
+```
+npm run dev
+```
+
+### 5. Configure Program ID
+
+In `src/constants.ts`:
+
+```ts
+export const PROGRAM_ID = "6UUoNhQHHQjKiFjs5wbyQ8X5jHk4aVXEwi8Lzvt8cTFw";
+```
+
+Frontend includes:
+
+* Phantom wallet connection
+* Initialize child wallet
+* Create chores
+* Submit completion
+* Rate & pay
+* Withdraw earnings
+
+---
+
+# 📘 Tech Stack
+
+### **On-chain**
+
+* Rust
+* Solana
+* Anchor Framework
+
+### **Frontend**
+
+* React
+* Vite
+* TypeScript
+* Solana Wallet Adapter
+
+---
+
+# 🏁 Summary
+
+ChainVault delivers:
+
+✔ Full chore lifecycle
+✔ Secure parent → child rewards system
+✔ On-chain accounting
+✔ Comprehensive test suite
+✔ Devnet deployment
+✔ Frontend integration-ready
+
+---
+
